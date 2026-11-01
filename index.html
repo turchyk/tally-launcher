@@ -31,14 +31,31 @@
     return '';
   }
 
-  // Субдомен trycloudflare: лише малі літери, цифри й дефіси. Ключ: hex.
-  var m = startParam().match(/^([a-z0-9-]{3,63})_([a-f0-9]{16,64})$/);
-  if (!m) {
+  var p = startParam();
+  var host = '', key = '';
+
+  // Формат 1 (trycloudflare): "<субдомен>_<ключ>"
+  var m = p.match(/^([a-z0-9-]{3,63})_([a-f0-9]{16,64})$/);
+  if (m) { host = m[1] + '.trycloudflare.com'; key = m[2]; }
+
+  // Формат 2 (Tailscale та інші): "x<ключ 24 hex><адреса в base64url>"
+  m = !host && p.match(/^x([a-f0-9]{24})([A-Za-z0-9_-]{4,300})$/);
+  if (m) {
+    try {
+      var b64 = m[2].replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var h = atob(b64).toLowerCase();
+      // Дозволяємо лише адреси Tailscale, щоб посилання не можна було підмінити на чужий сайт.
+      if (/^[a-z0-9-]+(\.[a-z0-9-]+)*\.ts\.net$/.test(h)) { host = h; key = m[1]; }
+    } catch (e) {}
+  }
+
+  if (!host) {
     document.getElementById('msg').innerHTML =
       '<b>TRANSFIGURATION TALLY</b>Відкрийте tally через кнопку з останнього повідомлення бота в чаті операторів.';
     return;
   }
-  location.replace('https://' + m[1] + '.trycloudflare.com/?k=' + m[2] + location.hash);
+  location.replace('https://' + host + '/?k=' + key + location.hash);
 })();
 </script>
 </body>
