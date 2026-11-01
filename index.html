@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HOPE TALLY</title>
+<title>TRANSFIGURATION TALLY</title>
 <style>
   html, body { margin: 0; height: 100%; background: #0f1218; color: #f2f4f8;
     font-family: -apple-system, system-ui, sans-serif; }
@@ -13,7 +13,7 @@
 </style>
 </head>
 <body>
-<p id="msg"><b>HOPE TALLY</b>Відкриваю…</p>
+<p id="msg"><b>TRANSFIGURATION TALLY</b>Відкриваю…</p>
 <script>
 // Пускач: постійна адреса для Telegram Mini App.
 // Бот передає в посиланні (startapp) сьогоднішню адресу тунелю і ключ: "<субдомен>_<ключ>".
@@ -35,7 +35,7 @@
   var m = startParam().match(/^([a-z0-9-]{3,63})_([a-f0-9]{16,64})$/);
   if (!m) {
     document.getElementById('msg').innerHTML =
-      '<b>HOPE TALLY</b>Відкрийте tally через кнопку з останнього повідомлення бота в чаті операторів.';
+      '<b>TRANSFIGURATION TALLY</b>Відкрийте tally через кнопку з останнього повідомлення бота в чаті операторів.';
     return;
   }
   location.replace('https://' + m[1] + '.trycloudflare.com/?k=' + m[2] + location.hash);
