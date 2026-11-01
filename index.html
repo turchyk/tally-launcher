@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HOPE TALLY</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0f1218; color: #f2f4f8;
+    font-family: -apple-system, system-ui, sans-serif; }
+  body { display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; box-sizing: border-box; }
+  p { color: #8a93a3; font-size: 15px; line-height: 1.5; max-width: 320px; }
+  b { display: block; font-size: 18px; color: #f2f4f8; margin-bottom: 8px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<p id="msg"><b>HOPE TALLY</b>Відкриваю…</p>
+<script>
+// Пускач: постійна адреса для Telegram Mini App.
+// Бот передає в посиланні (startapp) сьогоднішню адресу тунелю і ключ: "<субдомен>_<ключ>".
+// Ми перекидаємо вікно туди, зберігаючи дані Telegram (#tgWebAppData...), щоб tally знав ім'я оператора.
+(function () {
+  function startParam() {
+    var q = new URLSearchParams(location.search).get('tgWebAppStartParam');
+    if (q) return q;
+    var hash = new URLSearchParams(location.hash.slice(1));
+    var data = hash.get('tgWebAppData');
+    if (data) {
+      var sp = new URLSearchParams(data).get('start_param');
+      if (sp) return sp;
+    }
+    return '';
+  }
+
+  // Субдомен trycloudflare: лише малі літери, цифри й дефіси. Ключ: hex.
+  var m = startParam().match(/^([a-z0-9-]{3,63})_([a-f0-9]{16,64})$/);
+  if (!m) {
+    document.getElementById('msg').innerHTML =
+      '<b>HOPE TALLY</b>Відкрийте tally через кнопку з останнього повідомлення бота в чаті операторів.';
+    return;
+  }
+  location.replace('https://' + m[1] + '.trycloudflare.com/?k=' + m[2] + location.hash);
+})();
+</script>
+</body>
+</html>
